@@ -12,6 +12,52 @@ import Foundation
  
 /* For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
-public class DDOModel{
-    
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let welcome = try? newJSONDecoder().decode(Welcome.self, from: jsonData)
+
+import Foundation
+
+// MARK: - Welcome
+struct Welcome: Codable {
+    let recipe: [Recipe]
 }
+
+// MARK: - Recipe
+struct Recipe: Codable {
+    let name, id, recipeDescription: String
+    let tag: [String]
+    let image: String
+    let ingredient: [Ingredient]
+    let ingredientGroup: [IngredientGroup]?
+    let step: [Step]
+    let notes, forked: String?
+
+    enum CodingKeys: String, CodingKey {
+        case name, id
+        case recipeDescription = "description"
+        case tag, image, ingredient, ingredientGroup, step, notes, forked
+    }
+}
+
+// MARK: - Ingredient
+struct Ingredient: Codable {
+    let amount, unit, name, preparation: String?
+}
+
+// MARK: - IngredientGroup
+struct IngredientGroup: Codable {
+    let ingredient: [Ingredient]
+    let name: String?
+}
+
+// MARK: - Step
+struct Step: Codable {
+    let stepDescription: String
+
+    enum CodingKeys: String, CodingKey {
+        case stepDescription = "description"
+    }
+}
+

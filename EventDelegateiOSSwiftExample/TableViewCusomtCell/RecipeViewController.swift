@@ -8,40 +8,45 @@
 
 import UIKit
 
-class DDOViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tvDDO: UITableView!
     
-    var ddoModels:[DDOModel]?
+    var recipesList = [Recipe]()
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tvDDO.dataSource = self
         tvDDO.delegate = self
         readJSONDDOFile()
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+       
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ddoModels?.count)!
+        return recipesList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ddoCell") as! DDOTableViewCell
-        let ddo = ddoModels![indexPath.row]
-        cell.lblAccountType.text = "accountType"
-        cell.lblVIN.text = "vin"
-        cell.lblMakeModelYear.text = "year - ddo.make - model"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell") as! RecipeTableViewCell
+        let recipe = recipesList[indexPath.row]
+        cell.lblAccountType.text = recipe.name
+        cell.lblVIN.text = recipe.recipeDescription
+        cell.lblMakeModelYear.text = recipe.notes
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(100.0)
+    }
+    
+
     
     /*
     func getDDO(){
@@ -70,21 +75,15 @@ class DDOViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     //https://hackernoon.com/everything-about-codable-in-swift-4-97d0e18a2999
     func readJSONDDOFile(){
-        if let path = Bundle.main.path(forResource: "DDOData", ofType: "json") {
+        if let path = Bundle.main.path(forResource: "Recipes", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-                if let jsonResultData = jsonResult as? Array<AnyObject>
-                {
-                    // do stuff
-                    print(jsonResultData.count)
-                    
-                    //ddoModels = DDOModel.modelsFromDictionaryArray(array: jsonResult as! NSArray)
-                    
-                }
+                        let jsonDecoder = JSONDecoder()
+                        let welcome = try? jsonDecoder.decode(Welcome.self, from: data)
+                        recipesList = welcome!.recipe
             } catch {
                 // handle error
-                print("Error")
+                print("Error : \(error)")
             }
         }
     }

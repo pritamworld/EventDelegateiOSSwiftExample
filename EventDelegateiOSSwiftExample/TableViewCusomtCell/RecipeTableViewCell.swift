@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DDOTableViewCell: UITableViewCell {
+class RecipeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var lblMakeModelYear: UILabel!
     @IBOutlet weak var lblVIN: UILabel!
